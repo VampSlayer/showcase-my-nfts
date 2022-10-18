@@ -1,0 +1,9 @@
+:root {
+    --app-padding: 8px;
+    --app-margin: 8px;
+}
+
+body {
+    margin: 0;
+    font-family: "Sofia", sans-serif;
+}

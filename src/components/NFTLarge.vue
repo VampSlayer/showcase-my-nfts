@@ -1,11 +1,3 @@
-<script setup>
-import ColorThief from "colorthief/dist/color-thief"
-const address = new URLSearchParams(window.location.search).get("address")
-const nfts = await fetch(
-	`https://host.airland.io:5443/nfts/getNFTByAddress?walletAddress=${address}&status=1`
-).then((r) => r.json())
-</script>
-
 <template>
 	<div
 		class="large-nft-container"
@@ -50,6 +42,7 @@ const nfts = await fetch(
 </template>
 
 <script>
+import ColorThief from "colorthief/dist/color-thief"
 const colorThief = new ColorThief()
 export default {
 	name: "NFTLarge",
@@ -58,9 +51,15 @@ export default {
 			current: 0,
 			color: [255, 255, 255],
 			hover: false,
+			nfts: null,
+			firstLoad: true,
 		}
 	},
-	created() {
+	async created() {
+		const address = new URLSearchParams(window.location.search).get("address")
+		this.nfts = await fetch(
+			`https://host.airland.io:5443/nfts/getNFTByAddress?walletAddress=${address}&status=1`
+		).then((r) => r.json())
 		window.addEventListener("keydown", this.onKeydown)
 	},
 	computed: {
@@ -84,7 +83,8 @@ export default {
 	},
 	watch: {
 		nft() {
-			setTimeout(() => this.getColor(), 550)
+			setTimeout(() => this.getColor(), this.firstLoad ? 0 : 550)
+			this.firstLoad = false
 		}
 	},
 	methods: {

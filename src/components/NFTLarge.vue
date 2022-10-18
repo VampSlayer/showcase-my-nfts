@@ -39,6 +39,13 @@
 			<i class="fa fa-chevron-right" />
 		</button>
 	</div>
+	<div v-else class="large-nft-container">
+		<section class="center--h">
+			<div class="center--v">
+				<img src="/loading.gif" />
+			</div>
+		</section>
+	</div>
 </template>
 
 <script>

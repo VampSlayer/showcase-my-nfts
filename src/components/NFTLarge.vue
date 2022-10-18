@@ -10,6 +10,7 @@ const nfts = await fetch(
 	<div
 		class="large-nft-container"
 		:style="{ '--main-bg-color': background, '--main-text-color': text }"
+		v-if="nft"
 	>
 		<div class="square glass"></div>
 		<button v-if="current > 0" class="nft-arrow" @click="back">
@@ -62,15 +63,12 @@ export default {
 	created() {
 		window.addEventListener("keydown", this.onKeydown)
 	},
-	mounted() {
-		this.getColor()
-	},
 	computed: {
 		total() {
-			return this.nfts?.data.assets.filter((x) => x.image_url).length
+			return this.nfts?.data?.assets?.filter((x) => x.image_url)?.length
 		},
 		nft() {
-			return this.nfts?.data.assets.filter((x) => x.image_url)[this.current]
+			return this.nfts?.data?.assets?.filter((x) => x.image_url)[this.current]
 		},
 		background() {
 			return `rgba(${this.color[0]},${this.color[1]},${this.color[2]})`
@@ -84,16 +82,19 @@ export default {
 			return this.nft.traits.find((x) => x.trait_type === "artist")
 		},
 	},
+	watch: {
+		nft() {
+			setTimeout(() => this.getColor(), 550)
+		}
+	},
 	methods: {
 		back() {
 			if (this.current === 0) return
 			this.current = this.current - 1
-			setTimeout(() => this.getColor(), 550)
 		},
 		forward() {
 			if (this.current === this.total - 1) return
 			this.current = this.current + 1
-			setTimeout(() => this.getColor(), 550)
 		},
 		getColor() {
 			const img = this.$refs.img
@@ -101,7 +102,7 @@ export default {
 			if (img?.complete) {
 				this.color = colorThief.getColor(img)
 			} else {
-				img.addEventListener("load", () => {
+				img?.addEventListener("load", () => {
 					this.color = colorThief.getColor(img)
 				})
 			}

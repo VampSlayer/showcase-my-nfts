@@ -26,7 +26,7 @@ const nfts = await fetch(
 							@mouseenter="hover = true"
 							@mouseleave="hover = false"
 							class="nft-img"
-							id="img"
+							ref="img"
 							:src="nft.image_url"
 							:alt="nft.description"
 							crossorigin="anonymous"
@@ -96,9 +96,9 @@ export default {
 			setTimeout(() => this.getColor(), 550)
 		},
 		getColor() {
-			const img = document.querySelector("img")
+			const img = this.$refs.img
 
-			if (img.complete) {
+			if (img?.complete) {
 				this.color = colorThief.getColor(img)
 			} else {
 				img.addEventListener("load", () => {
